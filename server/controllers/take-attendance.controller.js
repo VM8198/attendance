@@ -19,7 +19,7 @@ take_attendance.fillAttendance = function(req , res){
 		req.body.userId ="5d92eda76b6aa2362ba8aa1c"
 	}
 	// res.send("DONE");
-	userModel.findOne({id : req.body.userId} ,async (err , foundUser)=>{
+	userModel.findOne({$or: [ {id : req.body.id}, {_id: req.body.userId}]} ,async (err , foundUser)=>{
 		console.log("found user", foundUser);
 		if(err){
 			console.log("error in finding student" , err);
@@ -37,7 +37,7 @@ take_attendance.fillAttendance = function(req , res){
 			var newDate = indiaTime.split("T")[0] + "T18:30:00.000Z";
 
 			try{
-				attendanceModel.findOne({id: req.body.userId})
+				attendanceModel.findOne({$or : [{id: req.body.id}, {userId: req.body.userId}]})
 				// .populate('userId')
 				.exec( async (err , foundAttendence)=>{
 					console.log("Found attendacne baro baar ====================================+> ", foundAttendence)
@@ -64,6 +64,7 @@ take_attendance.fillAttendance = function(req , res){
 									foundAttendence = await attendanceFunction.calculateDifference(foundAttendence , timeLogLength);
 									attendanceFunction.logOutTimeOfSameDay(foundAttendence)
 									.then(fullFilled => {
+										console.log("out ++++++", fullFilled)
 										var arr = [];
 										arr.push(fullFilled)
 										return res.status(200).send(arr);
@@ -79,6 +80,7 @@ take_attendance.fillAttendance = function(req , res){
 						if(lastRecord !="-" && !req.body.api_of){
 							attendanceFunction.logNewAttendanceOfSameDay(foundAttendence)
 							.then(fullFilled => {
+								console.log("In -------------", fullFilled)
 								var arr = [];
 								arr.push(fullFilled)
 								res.status(200).send(arr);
@@ -120,7 +122,7 @@ take_attendance.fillAttendance = function(req , res){
 						}
 					}
 					else{
-						req.body =  await attendanceFunction.newAttendance(req.body);
+						req.body =  await attendanceFunction.newAttendance(req.body, foundUser._id);
 						var attendence = new attendanceModel(req.body);
 						attendence.save(async(err , savedAttendence)=>{
 							if(err){

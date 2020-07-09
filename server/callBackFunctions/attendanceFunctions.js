@@ -6,7 +6,7 @@ var momentTimeZone = require('moment-timezone');
 
 
 const attendanceFunctions = {
-	newAttendance : function(body){
+	newAttendance : function(body, _id){
 		console.log("body in new attendence ===============+>" , body);
 		var indiaTime = momentTimeZone().tz("Asia/Kolkata").format();
 
@@ -14,12 +14,12 @@ const attendanceFunctions = {
 			day : moment(new Date(), "YYYY-MM-DD HH:mm:ss").format('dddd'),
 			time:  moment().utcOffset("+05:30").format('h:mm:ss a'),
 			status: "Present",
-			userId : body.userId,
-			id: body.userId,
+			userId : _id,
 			date : indiaTime.split("T")[0] + "T18:30:00.000Z",
 			timeLog : {
 				in : moment().utcOffset("+05:30").format('h:mm:ss a')
-			}
+			},
+			id: body.id
 		}
 		console.log("proper working =======> body " , body);
 		return body;
@@ -386,7 +386,7 @@ const attendanceFunctions = {
 	}, 
 	logOutTimeOfSameDay : (foundAttendence) => {
 		return new Promise((resolve, reject) => {
-			attendanceModel.findOneAndUpdate({date: foundAttendence.date , id: foundAttendence.id} , {$set: foundAttendence} , {upsert: true , new: true} , (err , updatedLog)=>{
+			attendanceModel.findOneAndUpdate({date: foundAttendence.date , userId: foundAttendence.userId._id} , {$set: foundAttendence} , {upsert: true , new: true} , (err , updatedLog)=>{
 				if(err){
 					reject(err);
 				}

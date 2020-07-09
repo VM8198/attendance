@@ -1,0 +1,37 @@
+{
+  "name": "muster_replacement_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^12.7.11",
+    "arp": "0.0.3",
+    "body-parser": "^1.19.0",
+    "bson-stream": "0.0.8",
+    "cors": "^2.8.5",
+    "cron-parser": "^2.11.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "getmac": "^1.4.6",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "lodash": "^4.17.15",
+    "macfromip": "^1.1.1",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.31",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.7.3",
+    "mongoose-autopopulate": "^0.9.1",
+    "node-cron": "^2.0.3",
+    "node-crontab": "0.0.8",
+    "nodemailer": "^6.3.1",
+    "nodemon": "^2.0.2",
+    "path": "^0.12.7",
+    "swal": "^0.1.0"
+  }
+}

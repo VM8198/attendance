@@ -1,47 +1,65 @@
 const Discord = require('discord.js'); 
 const client = new Discord.Client();  
 const cron = require('node-cron');
-const serverId = "702388774365036565"
+const serverId = ""
 const fetch = require("node-fetch");
-
-// var moment = require('moment');
 
 let users = [{
 	user: '',
-	status: ''
+	id: ''
 }]
 
 getAllUsersStatus = () => {
 	const guild = client.guilds.cache.get(serverId)
 	guild.members.cache.forEach(member => 
-		users.push({
-			user: member.user.username
-				// time: moment().format("DD/MM/YYYY hh:mm:ss a")
-			})
+	console.log("===>>>",member.user.username, member.user.id)
+		// users.push({
+		// 	user: member.user.username
+		// 		// time: moment().format("DD/MM/YYYY hh:mm:ss a")
+		// 	})
 		);
-	console.log("===>>>",users)
+}
+
+fillAttendance = (newStatus) => {
+	fetch('http://localhost:4000/attendance/fill-attendance', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+		    	body: JSON.stringify({"id": newStatus.user.id}), // string or object
+		    })
+		.then((res) => res.json())
+		.then((data) =>{ 
+			console.log(data)	
+		})
+		.catch((err) => {
+			console.log("Error===>>>",err)
+		})
 }
 
 client.on("presenceUpdate", (oldStatus, newStatus) => {
-	fetch('http://localhost:4000/attendance/fill-attendance', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-	    	body: JSON.stringify({"userId": newStatus.user.id}), // string or object
-	    })
-	.then((res) => res.json())
-	.then((data) =>{ 
-		console.log(data)
-	})
-	.catch((err) => {
-		console.log("Error===>>>",err)
-	})
+	console.log(newStatus.status, newStatus.user.username)
+	if(oldStatus){
+		if(newStatus.status == "idle"){
+			console.log("-------------")
+		} else if (oldStatus.status == "idle" && newStatus.status == "online"){
+			console.log("-------------")
+		} else if(oldStatus.status == "idle" && newStatus.status == "offline"){
+			console.log("API call")
+			fillAttendance(newStatus)		
+		} else if(oldStatus.status == "online" && newStatus.status == "offline"){
+			console.log("API call")
+			fillAttendance(newStatus)
+		} else if(oldStatus.status == "offline" && newStatus.status == "online"){
+			console.log("API call")
+			fillAttendance(newStatus)
+		}}
 });
 
 client.on('ready', () => {   
 	console.log(`Logged in as ${client.user.tag}!`);
-	getAllUsersStatus()	
+	// getAllUsersStatus()	
+	// updateUsers();
 });
 
 client.on('guildMemberUpdate', (update) => {
@@ -63,4 +81,4 @@ client.on('message', msg => {
 
 });
 
-client.login('NzI5OTg0MDA1NzQyNjU3NTQ4.XwQ48w.tE0eRGKvXh0dgSzeWrXerRnu014');
+client.login('');

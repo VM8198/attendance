@@ -37,7 +37,7 @@ take_attendance.fillAttendance = function(req , res){
 			var newDate = indiaTime.split("T")[0] + "T18:30:00.000Z";
 
 			try{
-				attendanceModel.findOne({$or : [{id: req.body.id}, {userId: req.body.userId}]})
+				attendanceModel.findOne({$or : [{id: req.body.id, date: newDate}, {userId: req.body.userId, date: newDate}]})
 				// .populate('userId')
 				.exec( async (err , foundAttendence)=>{
 					console.log("Found attendacne baro baar ====================================+> ", foundAttendence)

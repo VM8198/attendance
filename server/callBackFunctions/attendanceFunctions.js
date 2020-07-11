@@ -385,6 +385,7 @@ const attendanceFunctions = {
 		});
 	}, 
 	logOutTimeOfSameDay : (foundAttendence) => {
+		console.log("foundAttendence+PPPPPPPPPPPPPPPPPPPPPPPPPPPPPP", foundAttendence)
 		return new Promise((resolve, reject) => {
 			attendanceModel.findOneAndUpdate({date: foundAttendence.date , userId: foundAttendence.userId._id} , {$set: foundAttendence} , {upsert: true , new: true} , (err , updatedLog)=>{
 				if(err){

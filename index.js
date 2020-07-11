@@ -1,7 +1,7 @@
 const Discord = require('discord.js'); 
 const client = new Discord.Client();  
 const cron = require('node-cron');
-const serverId = ""
+const serverId = "serverId"
 const fetch = require("node-fetch");
 
 let users = [{
@@ -21,7 +21,7 @@ getAllUsersStatus = () => {
 }
 
 fillAttendance = (newStatus) => {
-	fetch('http://localhost:4000/attendance/fill-attendance', {
+	fetch('https://discord-attendance.mylionsgroup.com:5000/attendance/fill-attendance', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -38,22 +38,43 @@ fillAttendance = (newStatus) => {
 }
 
 client.on("presenceUpdate", (oldStatus, newStatus) => {
-	console.log(newStatus.status, newStatus.user.username)
-	if(oldStatus){
-		if(newStatus.status == "idle"){
-			console.log("-------------")
-		} else if (oldStatus.status == "idle" && newStatus.status == "online"){
-			console.log("-------------")
-		} else if(oldStatus.status == "idle" && newStatus.status == "offline"){
-			console.log("API call")
-			fillAttendance(newStatus)		
-		} else if(oldStatus.status == "online" && newStatus.status == "offline"){
-			console.log("API call")
-			fillAttendance(newStatus)
-		} else if(oldStatus.status == "offline" && newStatus.status == "online"){
-			console.log("API call")
-			fillAttendance(newStatus)
-		}}
+	console.log("oldStatus===>>>", oldStatus)
+	console.log(newStatus.status, newStatus.user.username, newStatus.user.id)
+	newUserId = newStatus.user.id; 
+	if( 
+		newUserId == "654909364657848375" || 
+		newUserId == "694058124977635328" || 
+		newUserId == "658976278858170378" || 
+		newUserId == "494177474192736270" || 
+		newUserId == "655380749482197002" ||
+		newUserId == "731039156830208071" ||
+		newUserId == "646628303683321866" ||
+		newUserId == "686564035281289290" ||
+		newUserId == "603230461791174667" ||
+		newUserId == "655327454277140500"
+	)
+	{
+		console.log("Admin users")
+	}else {
+
+		if(oldStatus){
+			if(newStatus.status == "idle"){
+				console.log("-------------")
+			} else if (oldStatus.status == "idle" && newStatus.status == "online"){
+				console.log("-------------")
+			} else if(oldStatus.status == "idle" && newStatus.status == "offline"){
+				console.log("API call")
+				fillAttendance(newStatus)		
+			} else if(oldStatus.status == "online" && newStatus.status == "offline"){
+				console.log("API call")
+				fillAttendance(newStatus)
+			} else if(oldStatus.status == "offline" && newStatus.status == "online"){
+				console.log("API call")
+				fillAttendance(newStatus)
+			}
+		}	
+	}
+	
 });
 
 client.on('ready', () => {   
@@ -81,4 +102,4 @@ client.on('message', msg => {
 
 });
 
-client.login('');
+client.login('token');

@@ -25,7 +25,7 @@ take_attendance.fillAttendance = function(req , res){
 			console.log("error in finding student" , err);
 			res.status(400).send(err);
 		}
-		else{
+		else if(foundUser){
 			if(req.body.loginFlag == false && foundUser.userRole != 'admin' && !req.body.isFaceRecognition){
 				await attendanceFunction.unauthorizedIPLoginEmail(foundUser);
 			}
